@@ -115,12 +115,18 @@ async function initialiseSettings() {
     },
   };
 
+  // set intial settings if non set
   const settings = await getSettings();
-
-  const emptySettings =
-    !settings || Object.keys(settings).length === 0;
-  if (emptySettings) {
-    await setSettings(INITIAL_SETTINGS);
+  const newSettings = { ...settings };
+  let willUpdateSettings = false;
+  Object.keys(INITIAL_SETTINGS).forEach(async (key) => {
+    if (!settings[key]) {
+      newSettings[key] = INITIAL_SETTINGS[key];
+      willUpdateSettings = true;
+    }
+  });
+  if (willUpdateSettings) {
+    await setSettings(newSettings);
   }
 
   return getSettings();
