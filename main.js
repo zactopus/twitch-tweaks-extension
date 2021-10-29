@@ -212,6 +212,16 @@ const SETTING_STYLES_MAP = {
     [aria-label="Bits"][data-a-target="bits-button"], 
     /* bitties badges */
     .chat-badge[aria-label*="Bits Leader "],
+    .chat-badge[aria-label$=" 1 badge"],
+    .chat-badge[aria-label$=" 100 badge"],
+    .chat-badge[aria-label$=" 1K badge"],
+    .chat-badge[aria-label$=" 5K badge"],
+    .chat-badge[aria-label$=" 10K badge"],
+    .chat-badge[aria-label$=" 25K badge"],
+    .chat-badge[aria-label$=" 50K badge"],
+    .chat-badge[aria-label$=" 75K badge"],
+    .chat-badge[aria-label$=" 100K badge"],
+    .chat-badge[aria-label$=" 200K badge"],
     .chat-badge[aria-label*="cheer "] {
         display: none !important;
     }
@@ -225,7 +235,8 @@ const SETTING_STYLES_MAP = {
     }
   `,
   removeAnnoyingChatBadges: `
-    /* turbo */
+    /* verified and turbo */
+    .chat-badge[aria-label="Verified badge"],
     .chat-badge[aria-label="Turbo badge"] {
         display: none !important;
     }
