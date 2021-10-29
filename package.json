@@ -1,0 +1,24 @@
+{
+  "name": "twitch-tweaks-extension",
+  "version": "1.0.0",
+  "scripts": {
+    "publish": "npm run lint && node web-ext-sign.js && npm run build",
+    "build": "web-ext build --overwrite-dest",
+    "lint": "npm run eslint && npm run web-ext-lint",
+    "eslint": "eslint .",
+    "web-ext-lint": "web-ext lint",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.4.1",
+    "prettier-eslint": "^13.0.0",
+    "web-ext": "^6.5.0"
+  }
+}

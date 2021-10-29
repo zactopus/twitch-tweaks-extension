@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+  "name": "zactopus' Twitch Tweaks",
+  "version": "1.0.1",
+  "content_scripts": [
+    {
+      "matches": ["*://*.twitch.tv/*"],
+      "js": ["main.js"]
+    }
+  ],
+  "permissions": ["activeTab", "storage"],
+  "browser_action": {
+    "default_icon": "icons/32.png",
+    "theme_icons": [
+      {
+        "light": "icons/32-light.png",
+        "dark": "icons/32.png",
+        "size": 32
+      }
+    ],
+    "default_title": "zactopus' Twitch Tweaks",
+    "default_popup": "popup/index.html"
+  }
+}
