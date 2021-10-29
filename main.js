@@ -113,6 +113,11 @@ async function initialiseSettings() {
       name: "Pink Mode",
       value: false,
     },
+    koFiButton: {
+      name: "Add Ko-fi button under stream",
+      value: false,
+      hardRefresh: true,
+    },
   };
 
   // set intial settings if non set
@@ -137,6 +142,33 @@ const DEFAULT_STYLES = `
   .community-highlight-stack__backlog-card:empty { /* hide empty community highlight container */
       display: none !important;
   }
+
+  [data-zactopus-twitch-tweaks-ko-fi-button="true"] { /* ko-fi button */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 1rem;
+    padding-left: 1rem;
+    padding-right: calc(var(--button-padding-x) - 0.2rem);
+    padding-left: 3.5rem;
+    height: var(--button-size-default);
+    background-color: var(--color-background-button-primary-default);
+    background-image: url('https://storage.ko-fi.com/cdn/cup-border.png');
+    background-repeat: no-repeat;
+    background-size: auto 45%;
+    background-position: calc(var(--button-padding-x) - 0.2rem) center;
+    color: var(--color-text-button-primary);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--button-text-default);
+    border-radius: var(--border-radius-medium);
+  }
+
+  [data-zactopus-twitch-tweaks-ko-fi-button="true"]:hover,
+  [data-zactopus-twitch-tweaks-ko-fi-button="true"]:active {
+    background-color: var(--color-background-button-primary-hover);
+    color: var(--color-text-button-primary);
+    text-decoration: none;
+  }
 `;
 
 const SETTING_STYLES_MAP = {
@@ -155,6 +187,11 @@ const SETTING_STYLES_MAP = {
     }
   `,
   removeSubscriptions: `
+    /* remove spacing when theres no sub badge there */
+    [data-zactopus-twitch-tweaks-ko-fi-button="true"] {
+      margin-left: 0;
+    }
+
     [data-test-selector="subscribe-button__dropdown"], /* sub button */
     .tw-halo__indicator, /* hide subs in chat */
     .channel-leaderboard, /* leaderboard things in chat */
@@ -604,6 +641,80 @@ function hideOfflineChannels() {
   });
 }
 
+function getFirstPath(path) {
+  const pathParts = path.split("/").filter((i) => i.length > 0);
+
+  if (pathParts.length !== 1) {
+    return null;
+  }
+
+  return pathParts[0];
+}
+
+function findKofiLinkElement() {
+  const kofiLinkElementInAboutSection = [
+    ...document.querySelectorAll(".about-section__panel--content a"),
+  ].find((element) => element.href.includes("ko-fi.com"));
+  if (kofiLinkElementInAboutSection) {
+    return kofiLinkElementInAboutSection;
+  }
+
+  const kofiLinkElementInPanelsSection = [
+    ...document.querySelectorAll(
+      '[data-test-selector="channel_panels_container_selector"] a',
+    ),
+  ].find((element) => element.href.includes("ko-fi.com"));
+  if (kofiLinkElementInPanelsSection) {
+    return kofiLinkElementInPanelsSection;
+  }
+
+  return null;
+}
+
+async function injectKofiButton() {
+  observe(document.body, () => {
+    const username = getFirstPath(window.location.pathname);
+    if (!username) {
+      return;
+    }
+
+    const kofiButtonId = `zactopus-twitch-tweaks-ko-fi-button-${username}`;
+    const kofiButtonDataAttribute =
+      "data-zactopus-twitch-tweaks-ko-fi-button";
+
+    const buttonsOnRightElement = document.querySelector(
+      '[data-target="channel-header-right"]',
+    );
+    const subscribeButtonElement =
+      buttonsOnRightElement.querySelector(
+        '[data-test-selector="subscribe-button__dropdown"]',
+      );
+
+    const kofiButtonElement = document.querySelector(
+      `[${kofiButtonDataAttribute}=true]`,
+    );
+    const kofiLinkElement = findKofiLinkElement();
+
+    if (
+      buttonsOnRightElement &&
+      subscribeButtonElement &&
+      kofiLinkElement &&
+      !kofiButtonElement
+    ) {
+      logger("Injecting Ko-fi button");
+
+      const koFiLinkElement = document.createElement("a");
+      koFiLinkElement.innerText = "Ko-fi";
+      koFiLinkElement.href = kofiLinkElement.href;
+      koFiLinkElement.setAttribute(kofiButtonDataAttribute, "true");
+      koFiLinkElement.id = kofiButtonId;
+      koFiLinkElement.rel = "noopener noreferrer";
+      koFiLinkElement.target = "_blank";
+      buttonsOnRightElement.appendChild(koFiLinkElement);
+    }
+  });
+}
+
 (async function () {
   /**
    * Check and set a global guard variable.
@@ -632,6 +743,10 @@ function hideOfflineChannels() {
   }
 
   removeHypeTrain();
+
+  if (settings.koFiButton.value === true) {
+    injectKofiButton();
+  }
 
   browser.storage.onChanged.addListener(() => {
     updateStyles();
