@@ -337,6 +337,7 @@ const SETTING_STYLES_MAP = {
     /* channel point window header */
     #channel-points-reward-center-header h5,
     /* live badge on video player */
+    .live-indicator-container,
     .tw-channel-status-text-indicator,
     /* share button under stream */ 
     [data-a-target="share-button"], 
