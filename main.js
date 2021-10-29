@@ -628,7 +628,22 @@ function hideOfflineChannels() {
       ...document.querySelectorAll(
         '[data-a-target="side-nav-live-status"]',
       ),
-    ].filter((element) => element.innerText === "Offline");
+    ].filter((element) => {
+      const parentElement = getParentElementWithClass(
+        element,
+        "tw-transition",
+      );
+      if (!parentElement) {
+        return false;
+      }
+
+      const isOffline = element.innerText === "Offline";
+      const isntHidden = !parentElement.hasAttribute(
+        "data-zactopus-twitch-tweaks-hidden",
+      );
+
+      return isOffline && isntHidden;
+    });
     const hasOfflineUserInSidebar = offlineUserElements.length > 0;
 
     if (hasOfflineUserInSidebar) {
