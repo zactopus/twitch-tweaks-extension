@@ -118,6 +118,11 @@ async function initialiseSettings() {
       value: false,
       hardRefresh: true,
     },
+    hideDeadByDaylight: {
+      name: "Hide Dead by Daylight streams",
+      value: false,
+      hardRefresh: true,
+    },
   };
 
   // set intial settings if non set
@@ -763,12 +768,15 @@ async function injectKofiButton() {
 
   redirectHomePageToFollowingPage();
 
+  let categoriesToRemove = [];
+  if (settings.hideDeadByDaylight.value === true) {
+    categoriesToRemove.push("Dead by Daylight");
+  }
+
   if (settings.alphabetiseFollowedChannels.value === true) {
     expandShowMore();
     hideOfflineChannels();
-    alphabetiseFollowedChannels({
-      categoriesToRemove: ["Dead by Daylight"],
-    });
+    alphabetiseFollowedChannels({ categoriesToRemove });
   }
 
   removeHypeTrain();
