@@ -57,7 +57,7 @@ async function setSettings(settings) {
 
 async function initialiseSettings() {
   // clear when debugging
-  //   await browser.storage[BROWSER_SCOPE].clear();
+  // await browser.storage[BROWSER_SCOPE].clear();
 
   const INITIAL_SETTINGS = {
     alphabetiseFollowedChannels: {
@@ -192,10 +192,12 @@ const SETTING_STYLES_MAP = {
       margin-left: 0;
     }
 
+    .sub-goal-progress-bar, /* sub goal */
     [data-test-selector="subscribe-button__dropdown"], /* sub button */
     .tw-halo__indicator, /* hide subs in chat */
     .channel-leaderboard, /* leaderboard things in chat */
-    /* sub gifts */
+    /* sub gifts */    
+    .chat-badge[aria-label*="Gifter Leader"],
     .chat-badge[aria-label="Sub Gifter badge"] {
         display: none !important;
     }
