@@ -123,6 +123,11 @@ async function initialiseSettings() {
       value: false,
       hardRefresh: true,
     },
+    hideRust: {
+      name: "Hide Rust streams",
+      value: false,
+      hardRefresh: true,
+    },
   };
 
   // set intial settings if non set
@@ -771,6 +776,9 @@ async function injectKofiButton() {
   let categoriesToRemove = [];
   if (settings.hideDeadByDaylight.value === true) {
     categoriesToRemove.push("Dead by Daylight");
+  }
+  if (settings.hideRust.value === true) {
+    categoriesToRemove.push("Rust");
   }
 
   if (settings.alphabetiseFollowedChannels.value === true) {
